@@ -1,4 +1,8 @@
-public class Address {
+package model;
+
+import java.io.Serializable;
+
+public class Address implements Serializable {
     private String country;
     private String city;
     private String province;
@@ -11,5 +15,9 @@ public class Address {
         this.province = province;
         this.street = street;
         this.postalCode = postalCode;
+    }
+
+    public String toString() {
+        return street + "\n" + city + ", " + province + " " + postalCode + "\n" + country;
     }
 }
