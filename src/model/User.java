@@ -16,11 +16,16 @@ public class User implements Serializable {
     public int getAge() {return age;}
     public int getCreditScore() {return creditScore;}
 
-    public User(String name, Address address, int age, int creditScore) {
+    public void setName(String name) {this.name = name;}
+    public void setAddress(Address address) {this.address = address;}
+    public void setAge(int age) {this.age = age;}
+    public void setCreditScore(int creditScore) {this.creditScore = creditScore;}
+
+    public User(String name, Address address, int age) {
         this.name = name;
         this.address = address;
         this.age = age;
-        this.creditScore = creditScore;
+        this.creditScore = -1;
     }
 
     public boolean openAccount(Account account) {

@@ -52,20 +52,19 @@ public class Database {
     }
 
     public boolean addUser(PrintWriter out, String username, String password, String name,
-                           Address address, int age, int creditScore) throws IOException {
+                           Address address, int age) throws IOException {
         if (users.containsKey(username)) {
             return false;
         }
 
         users.put(username, password);
 
-        //PrintWriter out = new PrintWriter(new FileWriter(directory+"users.txt", true));
         out.println(username+":"+password);
 
         File file = new File(directory+username+".txt");
         file.createNewFile();
         ObjectOutputStream objOut = new ObjectOutputStream(new FileOutputStream(file));
-        objOut.writeObject(new User(name, address, age, creditScore));
+        objOut.writeObject(new User(name, address, age));
         objOut.close();
 
         System.out.println(users);
@@ -74,10 +73,11 @@ public class Database {
     }
 
     public User getUserFromData(ObjectInputStream objIn) throws IOException, ClassNotFoundException {
-        //File file = new File(directory+username+".txt");
-        //BufferedReader in = new BufferedReader(new FileReader(file));
-
         User user = (User) objIn.readObject();
         return user;
+    }
+
+    public void rewriteUser(ObjectOutputStream objOut, User user) throws IOException {
+        objOut.writeObject(user);
     }
 }

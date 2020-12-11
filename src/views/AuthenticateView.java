@@ -9,6 +9,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
 public class AuthenticateView extends Pane {
     public static AuthenticateView instance = new AuthenticateView();
@@ -76,14 +77,15 @@ public class AuthenticateView extends Pane {
     }
 
     public void handleLogin() {
-        BankApp.window.getScene().setRoot(LoginView.getInstance());
+        this.getScene().setRoot(LoginView.getInstance());
     }
 
     public void handleSignup() {
-
+        this.getScene().setRoot(SignupView.getInstance());
     }
 
     public void handleQuit() {
-
+        Stage stage = (Stage) this.getScene().getWindow();
+        stage.close();
     }
 }

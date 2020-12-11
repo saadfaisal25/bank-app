@@ -2,6 +2,7 @@ package model;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 
 public class Bank {
@@ -20,10 +21,9 @@ public class Bank {
         user = null;
     }
 
-    public User createNewUser(PrintWriter out, String username, String password, String name,
-                              Address address, int age, int credit) throws IOException {
-        db.addUser(out, username, password, name, address, age, credit);
-        return new User(name, address, age, credit);
+    public boolean createNewUser(PrintWriter out, String username, String password, String name,
+                              Address address, int age) throws IOException {
+        return db.addUser(out, username, password, name, address, age);
     }
 
     public boolean authenticate(String username, String password) {
@@ -32,5 +32,9 @@ public class Bank {
 
     public void setUserFromData(ObjectInputStream objIn) throws IOException, ClassNotFoundException {
         this.user = db.getUserFromData(objIn);
+    }
+
+    public void saveUserToData(ObjectOutputStream objOut) throws IOException {
+        db.rewriteUser(objOut, this.user);
     }
 }

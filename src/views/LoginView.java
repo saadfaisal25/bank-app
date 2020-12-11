@@ -10,9 +10,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+
 public class LoginView extends Pane {
     private static LoginView instance = new LoginView();
-    public static String test = "sasdads";
+    private TextField userField;
+    private TextField passField;
 
     private LoginView() {
         setPrefSize(800, 600);
@@ -22,7 +27,7 @@ public class LoginView extends Pane {
         backB.relocate(0,0);
 
         // Create login page title label
-        Label titleLabel = new Label("Banking Application");
+        Label titleLabel = new Label("Log In Form");
         titleLabel.setFont(new Font("Trebuchet MS", 30));
 
         HBox topBox = new HBox(titleLabel);
@@ -34,7 +39,7 @@ public class LoginView extends Pane {
         Label userLabel = new Label("Username:");
         userLabel.setFont(new Font("Trebuchet MS", 20));
 
-        TextField userField = new TextField();
+        userField = new TextField();
         userField.setPrefSize(175, 50);
 
         HBox midBox1 = new HBox(userLabel, userField);
@@ -47,7 +52,7 @@ public class LoginView extends Pane {
         Label passLabel = new Label("Password:");
         passLabel.setFont(new Font("Trebuchet MS", 20));
 
-        TextField passField = new TextField();
+        passField = new TextField();
         passField.setPrefSize(175, 50);
 
         HBox midBox2 = new HBox(passLabel, passField);
@@ -73,6 +78,13 @@ public class LoginView extends Pane {
                 handleBack();
             }
         });
+
+        loginB.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                handleLogin();
+            }
+        });
     }
 
     public static LoginView getInstance() {
@@ -80,7 +92,30 @@ public class LoginView extends Pane {
     }
 
     public void handleBack() {
-        BankApp.window.getScene().setRoot(AuthenticateView.getInstance());
+        this.getScene().setRoot(AuthenticateView.getInstance());
+    }
+
+    public void handleLogin() {
+        String username = userField.getText();
+        String password = passField.getText();
+
+        if (BankApp.getModel().authenticate(username, password)) {
+            System.out.println("Log in authenticated");
+            try (ObjectInputStream objIn = new ObjectInputStream(new FileInputStream(BankApp.getDirectory()+username+".txt"))) {
+                BankApp.getModel().setUserFromData(objIn);
+                System.out.println("User data set");
+                System.out.println(BankApp.getModel().getUser().getName());
+                System.out.println(BankApp.getModel().getUser().getAddress());
+                System.out.println(BankApp.getModel().getUser().getAge());
+            } catch (IOException e) {
+                System.out.println("Error: IO Exception setting user");
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Invalid username or password");
+        }
+
     }
 }
 

@@ -8,6 +8,10 @@ public class Operation implements Serializable {
     private double amount;
     private OperationType type;
 
+    public LocalDateTime getLocalDateTime() {return localDateTime;}
+    public double getAmount() {return amount;}
+    public OperationType getType() {return type;}
+
     public Operation(LocalDateTime localDateTime, double amount, OperationType type) {
         this.localDateTime = localDateTime;
         this.amount = amount;
