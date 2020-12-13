@@ -32,6 +32,7 @@ public class Bank {
         return db.authenticate(username, password);
     }
 
+    // get the user from the database and set it to this.user
     public void setUserFromData(ObjectInputStream objIn) throws IOException, ClassNotFoundException {
         this.user = db.getUserFromData(objIn);
     }

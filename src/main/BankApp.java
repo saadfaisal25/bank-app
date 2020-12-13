@@ -16,7 +16,7 @@ public class BankApp extends Application {
 
     public BankApp() {
         // set the database directory and model
-        directory = "D:/Libraries/Documents/bank-app/src/db/";
+        directory = "D:/Libraries/Documents/bank-app/src/db/"; // CHANGE THIS DIRECTORY TO YOUR PREFERRED DATABASE DIRECTORY
         model = new Bank("NewBank", directory);
     }
 
