@@ -10,10 +10,12 @@ public class SavingsAccount extends Account {
         interestRate = 0.01;
     }
 
+    // add withdraw fee to the amount
     public boolean withdraw(double amount) {
         return super.withdraw(amount + withdrawFee);
     }
 
+    // add interest rate to balance
     public boolean monthlyProcess() {
         return super.deposit(getBalance() * interestRate);
     }

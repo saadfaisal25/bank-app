@@ -42,7 +42,7 @@ public class Database {
         }
     }
 
-    //
+    // return boolean whether or not the username and password combination exists in the users hashmap
     public boolean authenticate(String username, String password) {
         if (users.containsKey(username)) {
             return users.get(username).equals(password);
@@ -51,8 +51,11 @@ public class Database {
         }
     }
 
+    // add the username and password combination to the users hashmap
+    // write the username + password to the users.txt file
+    // create a new file with the username and write the user object to that file
     public boolean addUser(PrintWriter out, String username, String password, String name,
-                           Address address, int age) throws IOException {
+                           Address address, String age) throws IOException {
         if (users.containsKey(username)) {
             return false;
         }
@@ -64,7 +67,7 @@ public class Database {
         File file = new File(directory+username+".txt");
         file.createNewFile();
         ObjectOutputStream objOut = new ObjectOutputStream(new FileOutputStream(file));
-        objOut.writeObject(new User(name, address, age));
+        objOut.writeObject(new User(username, name, address, age));
         objOut.close();
 
         System.out.println(users);
@@ -72,11 +75,13 @@ public class Database {
         return true;
     }
 
+    // read the user object from the given file and return it
     public User getUserFromData(ObjectInputStream objIn) throws IOException, ClassNotFoundException {
         User user = (User) objIn.readObject();
         return user;
     }
 
+    // take a user object and write it to the given file
     public void rewriteUser(ObjectOutputStream objOut, User user) throws IOException {
         objOut.writeObject(user);
     }

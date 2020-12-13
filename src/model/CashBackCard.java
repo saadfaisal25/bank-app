@@ -10,6 +10,7 @@ public class CashBackCard extends CreditCard {
         totalSpent = 0.00;
     }
 
+    // if the amount can be withdrawn, check to see if eligible for a cash back
     public boolean withdraw(double amount) {
         if (super.withdraw(amount)) {
             claimCashBack();
@@ -18,7 +19,11 @@ public class CashBackCard extends CreditCard {
         return false;
     }
 
+    // for every $100 spent, deposit $1 as a cash back
     public void claimCashBack() {
-        super.deposit( ((Double) (totalSpent/100)).intValue() * (cashBackRate * 100) );
+        if (totalSpent >= 100) {
+            super.deposit(( ((totalSpent - (totalSpent % 100))) / 100) * (cashBackRate * 100));
+            totalSpent = totalSpent % 100;
+        }
     }
 }

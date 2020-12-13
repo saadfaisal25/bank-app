@@ -18,6 +18,13 @@ public class Operation implements Serializable {
         this.type = type;
     }
 
+    public String toString() {
+        if (type.equals(OperationType.DEPOSIT)) {
+            return "Deposit of amount $" + amount + " at " + localDateTime;
+        }
+        return "Withdrawal of amount $" + amount + " at " + localDateTime;
+    }
+
     enum OperationType {
         DEPOSIT,
         WITHDRAW

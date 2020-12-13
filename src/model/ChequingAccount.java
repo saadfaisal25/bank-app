@@ -8,6 +8,7 @@ public class ChequingAccount extends Account {
         monthlyFee = 10.00;
     }
 
+    // subtract monthly fee from balance
     public boolean monthlyProcess() {
         return super.withdraw(monthlyFee);
     }

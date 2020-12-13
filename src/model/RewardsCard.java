@@ -10,6 +10,7 @@ public class RewardsCard extends CreditCard {
         points = 0;
     }
 
+    // for every 1 dollar spent, add 1 reward point
     public boolean withdraw(double amount) {
         if (super.withdraw(amount)) {
             points += ((Double) amount).intValue();

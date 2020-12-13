@@ -1,9 +1,9 @@
 package model;
 
 public class TravelCard extends CreditCard {
-    private double annualFee;
+    private final double annualFee;
     private double airlineDollars;
-    private double dollarRate;
+    private final double dollarRate;
     private double totalSpent;
 
     public double getAirlineDollars() {return airlineDollars;}
@@ -16,6 +16,7 @@ public class TravelCard extends CreditCard {
         totalSpent = 0.00;
     }
 
+    // withdraw and add airline dollars using the airline dollar rate
     public boolean withdraw(double amount) {
         if (super.withdraw(amount)) {
             airlineDollars += amount * dollarRate;
@@ -26,10 +27,15 @@ public class TravelCard extends CreditCard {
         return false;
     }
 
+    // for every $5000 spent, add 400 bonus airline dollars
     public void claimDollars() {
-        airlineDollars += ((Double) (totalSpent/5000)).intValue() * 400;
+        if (totalSpent >= 5000) {
+            airlineDollars += ( ((totalSpent - (totalSpent % 5000)) / 5000) * 400);
+            totalSpent = totalSpent % 5000;
+        }
     }
 
+    // withdraw the annual fee
     public void annualProcess() {
         super.withdraw(annualFee);
     }

@@ -5,9 +5,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public abstract class Account implements Serializable, IsPaymentMethod {
-    private String accountName;
-    private String owner;
-    private long accNumber;
+    private final String accountName;
+    private final String owner;
+    private final long accNumber;
     private static long nextAccNumber = 100000L;
     private double balance;
     private ArrayList<Operation> operations;
@@ -25,6 +25,7 @@ public abstract class Account implements Serializable, IsPaymentMethod {
         operations = new ArrayList<>();
     }
 
+    // add amount to balance and add operation to the operations arraylist
     public boolean deposit(double amount) {
         if (amount > 0) {
             balance += amount;
@@ -34,6 +35,7 @@ public abstract class Account implements Serializable, IsPaymentMethod {
         return false;
     }
 
+    // subtract amount from balance and add the operation to operations
     public boolean withdraw(double amount) {
         if (amount <= balance && amount > 0) {
             balance -= amount;
@@ -41,5 +43,9 @@ public abstract class Account implements Serializable, IsPaymentMethod {
             return true;
         }
         return false;
+    }
+
+    public String toString() {
+        return accountName + " with a balance of $" + balance + "\nAccount Number: " + accNumber;
     }
 }
