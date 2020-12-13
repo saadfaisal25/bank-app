@@ -3,12 +3,11 @@ package views;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
+import main.BankApp;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -17,11 +16,12 @@ import java.io.ObjectInputStream;
 public class LoginView extends Pane {
     private static LoginView instance = new LoginView();
     private TextField userField;
-    private TextField passField;
+    private PasswordField passField;
 
     private LoginView() {
         setPrefSize(800, 600);
 
+        // create back button
         Button backB = new Button("Back");
         backB.setPrefSize(100, 40);
         backB.relocate(0,0);
@@ -35,7 +35,7 @@ public class LoginView extends Pane {
         topBox.setLayoutY(50);
         topBox.setAlignment(Pos.CENTER);
 
-        // Create log in and sign up buttons
+        // Create username label and text field
         Label userLabel = new Label("Username:");
         userLabel.setFont(new Font("Trebuchet MS", 20));
 
@@ -48,11 +48,11 @@ public class LoginView extends Pane {
         midBox1.setSpacing(50);
         midBox1.setAlignment(Pos.CENTER);
 
-        // Create log in and sign up buttons
+        // create password label and text field
         Label passLabel = new Label("Password:");
         passLabel.setFont(new Font("Trebuchet MS", 20));
 
-        passField = new TextField();
+        passField = new PasswordField();
         passField.setPrefSize(175, 50);
 
         HBox midBox2 = new HBox(passLabel, passField);
@@ -61,7 +61,7 @@ public class LoginView extends Pane {
         midBox2.setSpacing(50);
         midBox2.setAlignment(Pos.CENTER);
 
-        // Create quit button
+        // Create login button
         Button loginB = new Button("Log In");
         loginB.setPrefSize(250, 50);
 
@@ -91,29 +91,62 @@ public class LoginView extends Pane {
         return instance;
     }
 
+    // set scene to go back to AuthenticateView
     public void handleBack() {
         this.getScene().setRoot(AuthenticateView.getInstance());
     }
 
+    // show a new dialog window so user can acknowledge successful login
+    public void createDialogSuccess() {
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Success");
+
+        ButtonType type = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+
+        dialog.setContentText("Log In Successful");
+        dialog.getDialogPane().getButtonTypes().add(type);
+        dialog.showAndWait();
+
+        userField.clear();
+        passField.clear();
+    }
+
+    // dialog window to show login failure
+    public void createDialogFail() {
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Failure");
+
+        ButtonType type = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+
+        dialog.setContentText("Invalid username or password. Please try again.");
+        dialog.getDialogPane().getButtonTypes().add(type);
+        dialog.showAndWait();
+
+        passField.clear();
+    }
+
+    // checks if username and password is valid
     public void handleLogin() {
         String username = userField.getText();
         String password = passField.getText();
 
+        // if the username and password are valid, set the current application user from the database
         if (BankApp.getModel().authenticate(username, password)) {
             System.out.println("Log in authenticated");
             try (ObjectInputStream objIn = new ObjectInputStream(new FileInputStream(BankApp.getDirectory()+username+".txt"))) {
                 BankApp.getModel().setUserFromData(objIn);
                 System.out.println("User data set");
-                System.out.println(BankApp.getModel().getUser().getName());
-                System.out.println(BankApp.getModel().getUser().getAddress());
-                System.out.println(BankApp.getModel().getUser().getAge());
             } catch (IOException e) {
                 System.out.println("Error: IO Exception setting user");
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
+
+            createDialogSuccess();
+            // set the scene to Overview View
+            this.getScene().setRoot(OverviewView.getInstance());
         } else {
-            System.out.println("Invalid username or password");
+            createDialogFail();
         }
 
     }

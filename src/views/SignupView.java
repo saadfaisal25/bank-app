@@ -3,34 +3,34 @@ package views;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
-import model.Address;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import main.BankApp;
+import model.Address;
 
 public class SignupView extends Pane {
     private static SignupView instance = new SignupView();
     private AddressPane addressPane;
     private TextField userField;
-    private TextField passField;
+    private PasswordField passField;
     private TextField nameField;
     private TextField ageField;
 
     public SignupView() {
         setPrefSize(800, 600);
 
+        // create back button
         Button backB = new Button("Back");
         backB.setPrefSize(100, 40);
         backB.relocate(0,0);
 
-        // Create login page title label
+        // Create signup page title label
         Label titleLabel = new Label("Sign Up Form");
         titleLabel.setFont(new Font("Trebuchet MS", 30));
 
@@ -39,7 +39,7 @@ public class SignupView extends Pane {
         topBox.setLayoutY(50);
         topBox.setAlignment(Pos.CENTER);
 
-        // Create log in and sign up buttons
+        // Create username label and field
         Label userLabel = new Label("Username:");
         userLabel.setFont(new Font("Trebuchet MS", 20));
 
@@ -52,11 +52,11 @@ public class SignupView extends Pane {
         midBox1.setSpacing(50);
         midBox1.setAlignment(Pos.CENTER);
 
-        // Create log in and sign up buttons
+        // Create password label and field
         Label passLabel = new Label("Password:");
         passLabel.setFont(new Font("Trebuchet MS", 20));
 
-        passField = new TextField();
+        passField = new PasswordField();
         passField.setPrefSize(175, 25);
 
         HBox midBox2 = new HBox(passLabel, passField);
@@ -65,7 +65,7 @@ public class SignupView extends Pane {
         midBox2.setSpacing(50);
         midBox2.setAlignment(Pos.CENTER);
 
-        // Create log in and sign up buttons
+        // Create name label and field
         Label nameLabel = new Label("Name:");
         nameLabel.setFont(new Font("Trebuchet MS", 20));
 
@@ -78,7 +78,7 @@ public class SignupView extends Pane {
         midBox3.setSpacing(50);
         midBox3.setAlignment(Pos.CENTER);
 
-        // Create log in and sign up buttons
+        // Create age label and field
         Label ageLabel = new Label("Age:");
         ageLabel.setFont(new Font("Trebuchet MS", 20));
 
@@ -91,7 +91,7 @@ public class SignupView extends Pane {
         midBox4.setSpacing(50);
         midBox4.setAlignment(Pos.CENTER);
 
-        // Create log in and sign up buttons
+        // Create address pane
         addressPane = new AddressPane();
 
         HBox midBox5 = new HBox(addressPane);
@@ -100,7 +100,7 @@ public class SignupView extends Pane {
         midBox5.setSpacing(50);
         midBox5.setAlignment(Pos.CENTER);
 
-        // Create quit button
+        // Create sign up button
         Button signupB = new Button("Sign Up");
         signupB.setPrefSize(250, 50);
 
@@ -130,21 +130,62 @@ public class SignupView extends Pane {
         return instance;
     }
 
+    // clear all text fields
+    public void clearFields() {
+        userField.clear();
+        passField.clear();
+        nameField.clear();
+        ageField.clear();
+        addressPane.clear();
+    }
+
+    // set scene to go back to AuthenticateView
     public void handleBack() {
         this.getScene().setRoot(AuthenticateView.getInstance());
     }
 
+    // create dialog window for successful sign up
+    public void createDialogSuccess() {
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Success");
+
+        ButtonType type = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+
+        dialog.setContentText("Sign Up Successful. You can now log in.");
+        dialog.getDialogPane().getButtonTypes().add(type);
+        dialog.showAndWait();
+
+        clearFields();
+    }
+
+    // create dialog window for failed sign up
+    public void createDialogFail() {
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Failure");
+
+        ButtonType type = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+
+        dialog.setContentText("There was an error creating the user. Make sure the fields are valid.");
+        dialog.getDialogPane().getButtonTypes().add(type);
+        dialog.showAndWait();
+    }
+
+    // get all textfield values and create a new user in the model
     public void handleSignup() {
         String username = userField.getText();
         String password = passField.getText();
         String name = nameField.getText();
-        int age = Integer.parseInt(ageField.getText());
+        String age = ageField.getText();
         Address address = addressPane.getAddress();
 
+        // create new bank user using text field input
         try (PrintWriter out = new PrintWriter(new FileWriter(BankApp.getDirectory()+"users.txt", true));) {
             BankApp.getModel().createNewUser(out, username, password, name, address, age);
-            System.out.println("User Created");
+            createDialogSuccess();
+            // set scene to AuthenticateView so user can now log in
+            this.getScene().setRoot(AuthenticateView.getInstance());
         } catch (IOException e) {
+            createDialogFail();
             System.out.println("Error: IO Exception creating user");
         }
     }

@@ -7,20 +7,21 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class AuthenticateView extends Pane {
+    // create a single instance of this class
     public static AuthenticateView instance = new AuthenticateView();
 
     private AuthenticateView() {
         setPrefSize(800, 600);
 
-        // Create login page title label
+        // Create authentication page title label
         Label titleLabel = new Label("Banking Application");
         titleLabel.setFont(new Font("Trebuchet MS", 30));
 
+        // HBox to store and center the label horizontally
         HBox topBox = new HBox(titleLabel);
         topBox.setPrefWidth(800);
         topBox.setLayoutY(50);
@@ -33,6 +34,7 @@ public class AuthenticateView extends Pane {
         Button signupB = new Button("Sign Up");
         signupB.setPrefSize(175, 50);
 
+        // store and center the buttons in an HBox
         HBox midBox = new HBox(loginB, signupB);
         midBox.setPrefWidth(800);
         midBox.setLayoutY(200);
@@ -43,11 +45,13 @@ public class AuthenticateView extends Pane {
         Button quitB = new Button("Quit");
         quitB.setPrefSize(175, 50);
 
+        // store and center quit button in an HBox
         HBox botBox = new HBox(quitB);
         botBox.setPrefWidth(800);
         botBox.setAlignment(Pos.CENTER);
         botBox.setLayoutY(400);
 
+        // add all HBoxes
         getChildren().addAll(topBox, midBox, botBox);
 
         loginB.setOnAction(new EventHandler<ActionEvent>() {
@@ -76,14 +80,17 @@ public class AuthenticateView extends Pane {
         return instance;
     }
 
+    // set scene to LoginView
     public void handleLogin() {
         this.getScene().setRoot(LoginView.getInstance());
     }
 
+    // set scene to SignupView
     public void handleSignup() {
         this.getScene().setRoot(SignupView.getInstance());
     }
 
+    // close the stage and exit application
     public void handleQuit() {
         Stage stage = (Stage) this.getScene().getWindow();
         stage.close();

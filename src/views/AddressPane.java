@@ -24,6 +24,7 @@ public class AddressPane extends Pane {
     }
 
     public AddressPane() {
+        // create all labels and set font
         Label countryL = new Label("Country:");
         Label cityL = new Label("City:");
         Label provinceL = new Label("Province:");
@@ -36,12 +37,14 @@ public class AddressPane extends Pane {
         streetL.setFont(new Font("Trebuchet MS", 20));
         postL.setFont(new Font("Trebuchet MS", 20));
 
+        // set label positions
         countryL.relocate(0, 0);
         cityL.relocate(0, 30);
         provinceL.relocate(0, 60);
         streetL.relocate(0, 90);
         postL.relocate(0, 120);
 
+        // initialize and set text fields
         countryF = new TextField();
         cityF = new TextField();
         provinceF = new TextField();
@@ -64,5 +67,14 @@ public class AddressPane extends Pane {
         postF.setPrefHeight(25);
 
         getChildren().addAll(countryL, countryF, cityL, cityF, provinceL, provinceF, streetL, streetF, postL, postF);
+    }
+
+    // clear all text fields
+    public void clear() {
+        countryF.clear();
+        cityF.clear();
+        provinceF.clear();
+        streetF.clear();
+        postF.clear();
     }
 }
